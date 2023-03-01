@@ -1,0 +1,30 @@
+includedir /etc/krb5.conf.d/
+
+[logging]
+    default = FILE:/var/log/krb5libs.log
+    kdc = FILE:/var/log/krb5kdc.log
+    admin_server = FILE:/var/log/kadmind.log
+
+[libdefaults]
+    dns_lookup_realm = false
+    ticket_lifetime = 24h
+    renew_lifetime = 7d
+    forwardable = true
+    rdns = false
+    pkinit_anchors = FILE:/etc/pki/tls/certs/ca-bundle.crt
+    spake_preauth_groups = edwards25519
+    default_realm = {{ kerberos.realm_name | upper() }}
+    default_ccache_name = KEYRING:persistent:%{uid}
+    permitted_enctypes = arcfour-hmac-md5 aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 des3-cbc-sha1 camellia256-cts-cmac camellia128-cts-cmac des-cbc-crc des-cbc-md4 rc4-hmac
+
+[realms]
+    {{ kerberos.realm_name | upper() }} = {
+        kdc = {{ kerberos.domain_controller }}
+        admin_server = {{ kerberos.domain_controller }}
+        default_domain = {{ kerberos.realm_name | upper() }}
+        admin_keytab = {{ keytab.file_path }}
+    }
+
+[domain_realm]
+    .{{ realm_name | lower() }} = {{ kerberos.realm_name | upper() }}
+    {{ realm_name | lower() }} = {{ kerberos.realm_name | upper() }}

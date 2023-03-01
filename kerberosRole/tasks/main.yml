@@ -1,0 +1,47 @@
+---
+- name: "Installation des packages"
+  package: 
+    name: item
+    state: latest
+  with_items: "{{ packages_list }}"
+  become: true
+
+- name: "Démarrer les services"
+  service:
+    name: krb5kdc
+    state: started
+
+- name: "Copier le fichier keytab"
+  copy: 
+    src: "{{ main_path }}{{ keytab.init_file_path }}"
+    dest: "{{ main_path }}{{ keytab.file_path }}"
+    owner:
+    group:
+    mode: 0444
+
+- name: "Configuration du fichier krb5.conf"
+  template:
+    src: krb5.conf.j2
+    dest: "{{ kerberos.conf_file_path }}"
+
+- name: "Lister les tickets kerberos depuis le keytab"
+  klist:
+      filename: "{{ main_path }}{{ keytab.file_path }}"
+      time: true
+      encrypt_type: true
+
+- name: "Obtenir et mettre en cache TGT"
+  kinit:
+    user_name: "{{ kerberos.user }}"
+    realm_name: "{{ kerberos.realm_name }}"
+    secret_key: "{{ secret_key }}"
+  register: command_return
+  
+- name: "Redemarrer les services"
+  service:
+    name: krb5kdc
+    state: restarted
+    enabled: yes
+  become: true
+
+# Verif

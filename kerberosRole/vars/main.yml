@@ -1,0 +1,30 @@
+---
+domain_ad: EXAMPLE.COM
+realm_name:
+
+# Installation Kerberos
+packages_list:
+  - krb5-workstation
+  - libkadmin5
+  - krb5-libs
+services_list:
+  - krb5kdc
+  - kadmin
+
+secret_key: Intradef2019
+
+main_path: "/home/osboxes/Documents/test-main/test/playbooks/"
+
+# Configuration Kerberos
+kerberos:
+  # realm_name: "{{ realm_name }}.{{ domain_ad }}"
+  realm_name: "{{ domain_ad }}"
+  domain_controller: 10.0.2.15
+  user: tester
+  conf_file_path: /etc/krb5.conf
+
+# Keypass data
+keytab:
+  file_path: "test/truc.keytab"
+  init_file_path: "truc.keytab"
+...

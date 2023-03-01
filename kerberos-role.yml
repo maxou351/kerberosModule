@@ -1,0 +1,8 @@
+---
+- name: "Kerberos Installation"
+  hosts: localhost
+  vars_files: 
+    - kerberosRole/vars/main.yml
+  
+  roles:
+    - role: kerberosRole

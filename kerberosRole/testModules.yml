@@ -1,0 +1,19 @@
+# - name: test my new module
+#   hosts: localhost
+#   # ANSIBLE_PYTHON_INTERPRETER:
+#   tasks: 
+#   - name: kinit
+#     kinit:
+#       user_name: "tester"
+#       realm_name: "EXAMPLE.COM"
+#       secret_key: "Intradef2019"
+#     register: testout
+#   # - name: klist
+#   #   klist:
+#   #     filename: "truc.keytab"
+#   #     time: true
+#   #     encrypt_type: true
+#   #   register: testout
+#   - name: dump test output
+#     debug:
+#       msg: '{{ testout}}'
